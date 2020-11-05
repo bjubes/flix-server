@@ -64,6 +64,31 @@ func leaveGroup(w http.ResponseWriter, r *http.Request) {
 
 }
 
+type likeMoviePayload struct {
+	UserID string
+	Movies []string
+}
+
+func likeMovie(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	groupID := vars["id"]
+	reqBody, _ := ioutil.ReadAll(r.Body)
+	var likes likeMoviePayload
+	err := json.Unmarshal(reqBody, &likes)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintf(w, "%v", err)
+		return
+	}
+	for i, group := range Groups {
+		if group.ID == groupID {
+			group.UserVotesMap[likes.UserID] = append(group.UserVotesMap[likes.UserID], likes.Movies...)
+			Groups[i] = group
+			return
+		}
+	}
+}
+
 func remove(slice []string, s int) []string {
 	return append(slice[:s], slice[s+1:]...)
 }
