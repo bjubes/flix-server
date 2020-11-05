@@ -6,13 +6,14 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 	"strings"
 
 	"github.com/gorilla/mux"
 )
 
-func homePage(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Homepage")
+func home(w http.ResponseWriter, r *http.Request) {
+	fmt.Fprintf(w, "Flix Server API")
 }
 
 func handleRequests(addr string) {
@@ -20,7 +21,7 @@ func handleRequests(addr string) {
 
 	myRouter.Use(jsonContentType)
 
-	myRouter.HandleFunc("/", homePage)
+	myRouter.HandleFunc("/", home)
 	myRouter.HandleFunc("/users", allUsers)
 	myRouter.HandleFunc("/user", createNewUser).Methods("POST")
 	myRouter.HandleFunc("/user/{id}", returnSingleUser)
@@ -43,12 +44,12 @@ var Users []User
 var Groups []Group
 
 func main() {
-	var port Int
+	var port int
 	flag.IntVar(&port, "port", 10000, "Port of the flix server")
 	flag.Parse()
 
 	if p := os.Getenv("PORT"); p != "" {
-		port = p
+		port, _ = strconv.Atoi(p)
 	}
 	if strings.ToLower(os.Getenv("PROD")) != "true" {
 		Users = []User{
