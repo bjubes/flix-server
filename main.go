@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	"github.com/gorilla/mux"
 )
@@ -42,23 +43,24 @@ var Users []User
 var Groups []Group
 
 func main() {
-	var port string
-	flag.StringVar(&port, "port", "10000", "Port of the flix server")
+	var port Int
+	flag.IntVar(&port, "port", 10000, "Port of the flix server")
 	flag.Parse()
 
 	if p := os.Getenv("PORT"); p != "" {
 		port = p
 	}
-
-	Users = []User{
-		{UID: "1", Name: "testuser1", Email: "testuser@gmail.com"},
-		{UID: "2", Name: "billy bob", Email: "billyb@gmail.com"},
-	}
-	votes := make(map[string][]string)
-	votes["1"] = []string{}
-	votes["2"] = []string{}
-	Groups = []Group{
-		NewGroup("1", "2"),
+	if strings.ToLower(os.Getenv("PROD")) != "true" {
+		Users = []User{
+			{UID: "1", Name: "testuser1", Email: "testuser@gmail.com"},
+			{UID: "2", Name: "billy bob", Email: "billyb@gmail.com"},
+		}
+		votes := make(map[string][]string)
+		votes["1"] = []string{}
+		votes["2"] = []string{}
+		Groups = []Group{
+			NewGroup("1", "2"),
+		}
 	}
 	handleRequests(fmt.Sprintf(":%v", port))
 }
