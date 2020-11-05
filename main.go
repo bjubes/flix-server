@@ -17,6 +17,9 @@ func homePage(w http.ResponseWriter, r *http.Request) {
 
 func handleRequests(addr string) {
 	myRouter := mux.NewRouter().StrictSlash(true)
+
+	myRouter.Use(jsonContentType)
+
 	myRouter.HandleFunc("/", homePage)
 	myRouter.HandleFunc("/users", returnAllUsers)
 	myRouter.HandleFunc("/user", createNewUser).Methods("POST")
@@ -25,10 +28,17 @@ func handleRequests(addr string) {
 	log.Fatal(http.ListenAndServe(addr, myRouter))
 }
 
+func jsonContentType(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Add("Content-Type", "application/json")
+		next.ServeHTTP(w, r)
+	})
+}
+
 type User struct {
 	UID   string //`json:"Title"`
-	Name  string `json:"desc"`
-	Email string `json:"content"`
+	Name  string
+	Email string
 }
 
 var Users []User
@@ -67,8 +77,8 @@ func createNewUser(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		fmt.Fprintf(w, "%v", err)
+		return
 	}
 	Users = append(Users, user)
-
 	json.NewEncoder(w).Encode(user)
 }
