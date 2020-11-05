@@ -1,10 +1,8 @@
 package main
 
 import (
-	"encoding/json"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
@@ -22,9 +20,13 @@ func handleRequests(addr string) {
 	myRouter.Use(jsonContentType)
 
 	myRouter.HandleFunc("/", homePage)
-	myRouter.HandleFunc("/users", returnAllUsers)
+	myRouter.HandleFunc("/users", allUsers)
 	myRouter.HandleFunc("/user", createNewUser).Methods("POST")
 	myRouter.HandleFunc("/user/{id}", returnSingleUser)
+
+	myRouter.HandleFunc("/groups", allGroups)
+	myRouter.HandleFunc("/group", createNewGroup).Methods("POST")
+	myRouter.HandleFunc("/group/{id}", returnSingleGroup)
 
 	log.Fatal(http.ListenAndServe(addr, myRouter))
 }
@@ -36,17 +38,12 @@ func jsonContentType(next http.Handler) http.Handler {
 	})
 }
 
-type User struct {
-	UID   string //`json:"Title"`
-	Name  string
-	Email string
-}
-
 var Users []User
+var Groups []Group
 
 func main() {
 	var port string
-	flag.StringVar(&port, "port", "10000", "Port of the interop server")
+	flag.StringVar(&port, "port", "10000", "Port of the flix server")
 	flag.Parse()
 
 	if p := os.Getenv("PORT"); p != "" {
@@ -57,33 +54,11 @@ func main() {
 		{UID: "1", Name: "testuser1", Email: "testuser@gmail.com"},
 		{UID: "2", Name: "billy bob", Email: "billyb@gmail.com"},
 	}
+	votes := make(map[string][]string)
+	votes["1"] = []string{}
+	votes["2"] = []string{}
+	Groups = []Group{
+		NewGroup("1", "2"),
+	}
 	handleRequests(fmt.Sprintf(":%v", port))
-}
-
-func returnAllUsers(w http.ResponseWriter, r *http.Request) {
-	json.NewEncoder(w).Encode(Users)
-}
-
-func returnSingleUser(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	id := vars["id"]
-
-	for _, user := range Users {
-		if user.UID == id {
-			json.NewEncoder(w).Encode(user)
-		}
-	}
-}
-
-func createNewUser(w http.ResponseWriter, r *http.Request) {
-	reqBody, _ := ioutil.ReadAll(r.Body)
-	var user User
-	err := json.Unmarshal(reqBody, &user)
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		fmt.Fprintf(w, "%v", err)
-		return
-	}
-	Users = append(Users, user)
-	json.NewEncoder(w).Encode(user)
 }
