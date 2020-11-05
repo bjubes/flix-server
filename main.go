@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/gorilla/mux"
 )
@@ -47,6 +48,10 @@ func main() {
 	var port string
 	flag.StringVar(&port, "port", "10000", "Port of the interop server")
 	flag.Parse()
+
+	if p := os.Getenv("PORT"); p != "" {
+		port = p
+	}
 
 	Users = []User{
 		{UID: "1", Name: "testuser1", Email: "testuser@gmail.com"},
