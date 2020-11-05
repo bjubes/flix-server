@@ -37,3 +37,33 @@ func createNewGroup(w http.ResponseWriter, r *http.Request) {
 	Groups = append(Groups, g)
 	json.NewEncoder(w).Encode(g)
 }
+
+func leaveGroup(w http.ResponseWriter, r *http.Request) {
+	vars := mux.Vars(r)
+	reqBody, _ := ioutil.ReadAll(r.Body)
+	groupID := vars["id"]
+	var userID string
+	err := json.Unmarshal(reqBody, &userID)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintf(w, "%v", err)
+		return
+	}
+	for j, group := range Groups {
+		if group.ID == groupID {
+			for i, userid := range group.UserIDs {
+				if userid == userID {
+					group.UserIDs = append(group.UserIDs[:i], group.UserIDs[i+1:]...)
+					delete(group.UserVotesMap, userid)
+					Groups[j] = group
+					return
+				}
+			}
+		}
+	}
+
+}
+
+func remove(slice []string, s int) []string {
+	return append(slice[:s], slice[s+1:]...)
+}

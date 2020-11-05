@@ -28,6 +28,8 @@ func handleRequests(addr string) {
 
 	myRouter.HandleFunc("/groups", allGroups)
 	myRouter.HandleFunc("/group", createNewGroup).Methods("POST")
+	myRouter.HandleFunc("/group/{id}/leave", leaveGroup).Methods("POST")
+
 	myRouter.HandleFunc("/group/{id}", returnSingleGroup)
 
 	log.Fatal(http.ListenAndServe(addr, myRouter))
