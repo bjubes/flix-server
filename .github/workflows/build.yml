@@ -17,5 +17,4 @@ jobs:
     - name: Archive Executables
       uses: actions/upload-artifact@v2
       with:
-        name: flix-server
         path: flix-server-*
