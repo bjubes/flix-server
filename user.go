@@ -56,7 +56,7 @@ func addFriend(w http.ResponseWriter, r *http.Request) {
 }
 
 func showFriends(w http.ResponseWriter, r *http.Request) {
-	//add the user posting to the friend list of the user who is in the URL
+	//show friends of the user in the URL
 	vars := mux.Vars(r)
 	friend := vars["id"]
 	if _, ok := FriendsMap[friend]; !ok {
