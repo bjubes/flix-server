@@ -24,6 +24,9 @@ func handleRequests(addr string) {
 	myRouter.HandleFunc("/", home)
 	myRouter.HandleFunc("/users", allUsers)
 	myRouter.HandleFunc("/user", createNewUser).Methods("POST")
+	myRouter.HandleFunc("/user/{id}/friend", addFriend).Methods("POST")
+	myRouter.HandleFunc("/user/{id}/friends", showFriends)
+
 	myRouter.HandleFunc("/user/{id}", returnSingleUser)
 
 	myRouter.HandleFunc("/groups", allGroups)
@@ -44,6 +47,7 @@ func jsonContentType(next http.Handler) http.Handler {
 
 var Users []User
 var Groups []Group
+var FriendsMap map[string][]string
 
 func main() {
 	var port int
@@ -53,6 +57,7 @@ func main() {
 	if p := os.Getenv("PORT"); p != "" {
 		port, _ = strconv.Atoi(p)
 	}
+	FriendsMap = make(map[string][]string)
 	if strings.ToLower(os.Getenv("PROD")) != "true" {
 		Users = []User{
 			{UID: "1", Name: "testuser1", Email: "testuser@gmail.com"},

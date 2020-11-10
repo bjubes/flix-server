@@ -36,3 +36,31 @@ func createNewUser(w http.ResponseWriter, r *http.Request) {
 	Users = append(Users, user)
 	json.NewEncoder(w).Encode(user)
 }
+
+func addFriend(w http.ResponseWriter, r *http.Request) {
+	//add the user posting to the friend list of the user who is in the URL
+	vars := mux.Vars(r)
+	friend := vars["id"]
+	reqBody, _ := ioutil.ReadAll(r.Body)
+	var self string
+	err := json.Unmarshal(reqBody, &self)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		fmt.Fprintf(w, "%v", err)
+		return
+	}
+	friendsList := FriendsMap[friend]
+	friendsList = append(friendsList, self)
+	FriendsMap[friend] = friendsList
+	json.NewEncoder(w).Encode(FriendsMap[friend])
+}
+
+func showFriends(w http.ResponseWriter, r *http.Request) {
+	//add the user posting to the friend list of the user who is in the URL
+	vars := mux.Vars(r)
+	friend := vars["id"]
+	if _, ok := FriendsMap[friend]; !ok {
+		FriendsMap[friend] = []string{}
+	}
+	json.NewEncoder(w).Encode(FriendsMap[friend])
+}
