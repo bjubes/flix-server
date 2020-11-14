@@ -23,7 +23,6 @@ func handleRequests(addr string) {
 
 	myRouter.HandleFunc("/", home)
 	myRouter.HandleFunc("/users", allUsers)
-	myRouter.HandleFunc("/user", createNewUser).Methods("POST")
 	myRouter.HandleFunc("/user/{id}/friend", addFriend).Methods("POST")
 	myRouter.HandleFunc("/user/{id}/friends", showFriends)
 
@@ -34,6 +33,9 @@ func handleRequests(addr string) {
 	myRouter.HandleFunc("/group/{id}/leave", leaveGroup).Methods("POST")
 	myRouter.HandleFunc("/group/{id}/like", likeMovie).Methods("POST")
 	myRouter.HandleFunc("/group/{id}", returnSingleGroup)
+
+	myRouter.HandleFunc("/login", loginUser).Methods("POST")
+	myRouter.HandleFunc("/register", createNewUser).Methods("POST")
 
 	log.Fatal(http.ListenAndServe(addr, myRouter))
 }
@@ -60,7 +62,7 @@ func main() {
 	FriendsMap = make(map[string][]string)
 	if strings.ToLower(os.Getenv("PROD")) != "true" {
 		Users = []User{
-			{UID: "1", Name: "testuser1", Email: "testuser@gmail.com"},
+			{UID: "1", Name: "testuser1", Email: "testuser@gmail.com", password: "test"},
 			{UID: "2", Name: "billy bob", Email: "billyb@gmail.com"},
 		}
 		votes := make(map[string][]string)

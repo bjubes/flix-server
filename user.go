@@ -26,15 +26,17 @@ func returnSingleUser(w http.ResponseWriter, r *http.Request) {
 
 func createNewUser(w http.ResponseWriter, r *http.Request) {
 	reqBody, _ := ioutil.ReadAll(r.Body)
-	var user User
+	var user UserWithPassword
 	err := json.Unmarshal(reqBody, &user)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		fmt.Fprintf(w, "%v", err)
 		return
 	}
-	Users = append(Users, user)
-	json.NewEncoder(w).Encode(user)
+	actualUser := user.User
+	actualUser.password = user.Password
+	Users = append(Users, actualUser)
+	json.NewEncoder(w).Encode(actualUser)
 }
 
 func addFriend(w http.ResponseWriter, r *http.Request) {

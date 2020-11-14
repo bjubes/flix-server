@@ -5,10 +5,21 @@ import (
 	"math/rand"
 )
 
+type UserLogin struct {
+	Username string
+	Password string
+}
+
 type User struct {
-	UID   string //`json:"uid"`
-	Name  string
-	Email string
+	UID      string //`json:"uid"`
+	Name     string
+	Email    string
+	password string //doesnt show in JSON
+}
+
+type UserWithPassword struct {
+	User
+	Password string
 }
 
 type Group struct {
