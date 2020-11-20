@@ -69,7 +69,7 @@ func main() {
 		votes["1"] = []string{}
 		votes["2"] = []string{}
 		Groups = []Group{
-			NewGroup("1", "2"),
+			NewGroup("1235", "da bois", "1", "2"),
 		}
 	}
 	handleRequests(fmt.Sprintf(":%v", port))

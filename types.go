@@ -1,10 +1,5 @@
 package main
 
-import (
-	"fmt"
-	"math/rand"
-)
-
 type UserLogin struct {
 	Username string
 	Password string
@@ -22,21 +17,27 @@ type UserWithPassword struct {
 	Password string
 }
 
+type VotelessGroup struct {
+	ID      string
+	Name    string
+	UserIDs []string
+}
 type Group struct {
-	ID           string
-	UserIDs      []string
+	VotelessGroup
 	UserVotesMap map[string][]string //  UID -> [movieID]
 }
 
-func NewGroup(userIDs ...string) Group {
+func NewGroup(id, name string, userIDs ...string) Group {
 	votes := make(map[string][]string)
 	for _, uid := range userIDs {
 		votes[uid] = []string{}
 	}
-	id := fmt.Sprintf("%v", rand.Int())
 	return Group{
-		ID:           id,
-		UserIDs:      userIDs,
-		UserVotesMap: votes,
+		VotelessGroup{
+			Name:    name,
+			ID:      id,
+			UserIDs: userIDs,
+		},
+		votes,
 	}
 }

@@ -26,14 +26,14 @@ func returnSingleGroup(w http.ResponseWriter, r *http.Request) {
 
 func createNewGroup(w http.ResponseWriter, r *http.Request) {
 	reqBody, _ := ioutil.ReadAll(r.Body)
-	var userIDs []string
-	err := json.Unmarshal(reqBody, &userIDs)
+	var group VotelessGroup
+	err := json.Unmarshal(reqBody, &group)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		fmt.Fprintf(w, "%v", err)
 		return
 	}
-	g := NewGroup(userIDs...)
+	g := NewGroup(group.ID, group.Name, group.UserIDs...)
 	Groups = append(Groups, g)
 	json.NewEncoder(w).Encode(g)
 }
