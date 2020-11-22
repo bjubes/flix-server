@@ -27,6 +27,15 @@ func returnSingleUser(w http.ResponseWriter, r *http.Request) {
 func createNewUser(w http.ResponseWriter, r *http.Request) {
 	reqBody, _ := ioutil.ReadAll(r.Body)
 	var user UserWithPassword
+
+	for _, u := range Users {
+		if u.UID == user.UID || u.Name == user.Name || u.Email == user.Email {
+			w.WriteHeader(http.StatusBadRequest)
+			fmt.Fprintf(w, "%v", "user already exists")
+			return
+		}
+	}
+
 	err := json.Unmarshal(reqBody, &user)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
