@@ -62,14 +62,14 @@ func main() {
 	FriendsMap = make(map[string][]string)
 	if strings.ToLower(os.Getenv("PROD")) != "true" {
 		Users = []User{
-			{UID: "1", Name: "testuser1", Email: "testuser@gmail.com", password: "test"},
-			{UID: "2", Name: "testuser2", Email: "billyb@gmail.com"},
+			{UID: "C6040ECD-A6FD-4195-B998-41F0C720169E", Name: "testuser1", Email: "testuser@gmail.com", password: "test"},
+			{UID: "B44F46AB-F1FF-4909-91EA-9EDD69CA81EC", Name: "testuser2", Email: "billyb@gmail.com"},
 		}
 		votes := make(map[string][]string)
-		votes["1"] = []string{}
-		votes["2"] = []string{}
+		votes["C6040ECD-A6FD-4195-B998-41F0C720169E"] = []string{}
+		votes["B44F46AB-F1FF-4909-91EA-9EDD69CA81EC"] = []string{}
 		Groups = []Group{
-			NewGroup("1235", "da bois", "1", "2"),
+			//NewGroup("1235", "da bois", "1", "2"),
 		}
 	}
 	handleRequests(fmt.Sprintf(":%v", port))
