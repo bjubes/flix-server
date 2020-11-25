@@ -75,7 +75,7 @@ func likeMovie(w http.ResponseWriter, r *http.Request) {
 	reqBody, _ := ioutil.ReadAll(r.Body)
 	var likes likeMoviePayload
 	err := json.Unmarshal(reqBody, &likes)
-	if err != nil {
+	if err != nil || likes.Movies == nil || likes.UserID == "" {
 		w.WriteHeader(http.StatusBadRequest)
 		fmt.Fprintf(w, "%v", err)
 		return
