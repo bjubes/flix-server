@@ -63,7 +63,7 @@ func main() {
 	if strings.ToLower(os.Getenv("PROD")) != "true" {
 		Users = []User{
 			{UID: "C6040ECD-A6FD-4195-B998-41F0C720169E", Name: "testuser1", Email: "testuser@gmail.com", password: "test"},
-			{UID: "B44F46AB-F1FF-4909-91EA-9EDD69CA81EC", Name: "testuser2", Email: "billyb@gmail.com"},
+			{UID: "B44F46AB-F1FF-4909-91EA-9EDD69CA81EC", Name: "testipad", Email: "brian2386@gmail.com", password: "test"},
 		}
 		votes := make(map[string][]string)
 		votes["C6040ECD-A6FD-4195-B998-41F0C720169E"] = []string{}
