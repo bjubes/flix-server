@@ -54,6 +54,10 @@ func leaveGroup(w http.ResponseWriter, r *http.Request) {
 			for i, userid := range group.UserIDs {
 				if userid == userID {
 					group.UserIDs = append(group.UserIDs[:i], group.UserIDs[i+1:]...)
+					if len(group.UserIDs) == 0 {
+						Groups = append(Groups[:j], Groups[j+1:]...)
+						return
+					}
 					delete(group.UserVotesMap, userid)
 					Groups[j] = group
 					return
@@ -82,7 +86,19 @@ func likeMovie(w http.ResponseWriter, r *http.Request) {
 	}
 	for i, group := range Groups {
 		if group.ID == groupID {
-			group.UserVotesMap[likes.UserID] = append(group.UserVotesMap[likes.UserID], likes.Movies...)
+			newLikes := []string{}
+			for _, l := range likes.Movies {
+				var uniq = true
+				for _, v := range group.UserVotesMap[likes.UserID] {
+					if v == l {
+						uniq = false
+					}
+				}
+				if uniq {
+					newLikes = append(newLikes, l)
+				}
+			}
+			group.UserVotesMap[likes.UserID] = append(group.UserVotesMap[likes.UserID], newLikes...)
 			Groups[i] = group
 			return
 		}
