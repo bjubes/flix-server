@@ -21,6 +21,7 @@ type VotelessGroup struct {
 	ID      string
 	Name    string
 	UserIDs []string
+	MaxTime int
 }
 type Group struct {
 	VotelessGroup
