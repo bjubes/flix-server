@@ -28,7 +28,7 @@ type Group struct {
 	UserVotesMap map[string][]string //  UID -> [movieID]
 }
 
-func NewGroup(id, name string, userIDs ...string) Group {
+func NewGroup(id, name string, maxTime int, userIDs ...string) Group {
 	votes := make(map[string][]string)
 	for _, uid := range userIDs {
 		votes[uid] = []string{}
@@ -38,6 +38,7 @@ func NewGroup(id, name string, userIDs ...string) Group {
 			Name:    name,
 			ID:      id,
 			UserIDs: userIDs,
+			MaxTime: maxTime,
 		},
 		votes,
 	}

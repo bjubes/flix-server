@@ -33,7 +33,7 @@ func createNewGroup(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "%v", err)
 		return
 	}
-	g := NewGroup(group.ID, group.Name, group.UserIDs...)
+	g := NewGroup(group.ID, group.Name, group.MaxTime, group.UserIDs...)
 	Groups = append(Groups, g)
 	json.NewEncoder(w).Encode(g)
 }
